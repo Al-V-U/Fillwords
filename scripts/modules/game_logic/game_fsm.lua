@@ -1,5 +1,7 @@
 local machine = require("scripts.modules.statemachine")
 local level = require("scripts.modules.game_logic.level")
+local level_creator = require("scripts.modules.game_logic.level_creator")
+local profile_service = require("scripts.modules.profile_service")
 local game_play = require("scripts.modules.game_logic.game_play")
 local monarch = require "monarch.monarch"
 
@@ -42,14 +44,12 @@ function M.init(self)
 	})
 
 	function fsm.onloading(self, event, from, to)
-		print "loading"
 		level.load_level()
-		print("to", to)
 		fsm:build()
 	end
 
 	function fsm.oncreate(self, event, from, to)
-		print("create", event, from, to)
+		level_creator.create(game_screen_self)
 		fsm:apply_saved()
 	end
 
@@ -73,6 +73,7 @@ function M.init(self)
 
 	function fsm.onwin(self, event, from, to)
 		print "win"
+		profile_service.finish_level()
 		fsm:complete()
 	end
 

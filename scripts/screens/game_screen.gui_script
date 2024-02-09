@@ -3,9 +3,11 @@ local druid = require "druid.druid"
 local const = require("druid.const")
 local druid_style = require("scripts.modules.druid_style")
 local game_fsm = require("scripts.modules.game_logic.game_fsm")
+local profile_service = require("scripts.modules.profile_service")
 
 local function on_cheat_win_btn_click()
     print "cheat win"
+    profile_service.finish_level()
     monarch.replace("win_screen")
 end
 

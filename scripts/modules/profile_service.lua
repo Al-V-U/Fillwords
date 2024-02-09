@@ -48,6 +48,10 @@ local function reset()
 	M.save_profile(true)
 end
 
+function M.finish_level()
+	M.set_last_finished_level_num(M.get_level_num())
+end
+
 function M.set_last_finished_level_num(finished_level_num)
 	profile.last_finished_level_num = finished_level_num
 	reset()

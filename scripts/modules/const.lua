@@ -1,5 +1,8 @@
 local M = {}
 
+M.field_letter_template = hash("field_letter_template")
+M.field_letter = hash("field_letter")
+
 M.colors = {
 	vmath.vector4(0.92, 0.41, 0.48, 1),
 	vmath.vector4(0.53, 0.74, 0.43, 1),
