@@ -1,23 +1,25 @@
 [project]
 title = Fillwords
+custom_resources = levels,dictionary
 dependencies#0 = https://github.com/Insality/druid/archive/refs/tags/0.11.0.zip
 dependencies#1 = https://github.com/defold/lua-language-server/releases/download/v0.0.5/release.zip
 dependencies#2 = https://github.com/d954mas/defold-utf8/archive/master.zip
 dependencies#3 = https://github.com/indiesoftby/defold-yagames/archive/refs/heads/master.zip
-dependencies#4 = https://github.com/britzl/defold-orthographic/archive/master.zip
-dependencies#5 = https://github.com/britzl/monarch/archive/refs/tags/5.1.0.zip
+dependencies#4 = https://github.com/britzl/monarch/archive/master.zip
 
 [bootstrap]
-main_collection = /main/main.collectionc
-render = /orthographic/render/orthographic.renderc
+main_collection = /game_objects/main.collectionc
 
 [input]
 game_binding = /input/game.input_bindingc
 use_accelerometer = 0
 
 [display]
-width = 1280
-height = 720
+width = 1920
+height = 1080
+high_dpi = 1
+display_profiles = /config/1920x1080.display_profilesc
+dynamic_orientation = 1
 
 [script]
 shared_state = 1
@@ -40,4 +42,15 @@ show_console_banner = 0
 show_made_with_defold = 0
 show_fullscreen_button = 0
 cssfile = /builtins/manifests/web/dark_theme.css
+scale_mode = stretch
+splash_image = /assets/images/logo.png
+
+[label]
+max_count = 4096
+
+[sprite]
+max_count = 4096
+
+[graphics]
+texture_profiles = /config/custom.texture_profiles
 

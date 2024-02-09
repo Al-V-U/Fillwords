@@ -1,0 +1,27 @@
+local monarch = require "monarch.monarch"
+local profile_service = require 'scripts.modules.profile_service'
+local yagames = require("yagames.yagames")
+--require("scripts.modules.utils")
+
+local function init_handler(self, err)
+	if err then
+		print("Something went wrong:", err)
+	else
+		yagames.features_loadingapi_ready()
+		profile_service.init()
+	end
+end
+
+function init(self)
+	msg.post("@render:", "use_stretch_projection", { near = -1, far = 1 })
+	yagames.init(init_handler)
+	timer.delay(0.0, false, function()
+		monarch.show("game_screen")
+	end)
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.pressed then
+		print("Touch!")
+	end
+end

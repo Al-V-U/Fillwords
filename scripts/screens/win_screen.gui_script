@@ -1,0 +1,54 @@
+local monarch = require "monarch.monarch"
+local druid = require "druid.druid"
+local const = require("druid.const")
+local druid_style = require("scripts.modules.druid_style")
+local game = require("scripts.modules.game_logic.game")
+
+local function on_next_level_btn_click()
+    print "win next click"
+    monarch.replace("game_screen")
+end
+
+function init(self)
+    msg.post(".", "acquire_input_focus")
+
+    self.druid = druid.new(self)
+
+    local custom_style = self.druid:new_button("next_level_btn", on_next_level_btn_click)
+    custom_style:set_style(druid_style)
+
+    self.texts = {
+        self.druid:new_text("next_level_text", nil, const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("banner_text", nil, const.TEXT_ADJUST.DOWNSCALE),
+        --[[ text scale variants
+        self.druid:new_text("text_trim", nil, const.TEXT_ADJUST.TRIM),
+        self.druid:new_text("text_no_adjust", nil, const.TEXT_ADJUST.NO_ADJUST),
+        self.druid:new_text("text_scale_limited", nil, const.TEXT_ADJUST.DOWNSCALE_LIMITED)
+        :set_minimal_scale(0.5),
+        self.druid:new_text("text_scroll", nil, const.TEXT_ADJUST.SCROLL),
+        self.druid:new_text("text_scroll_scale", nil, const.TEXT_ADJUST.SCALE_THEN_SCROLL)
+        :set_minimal_scale(0.5)
+        ]]--
+    }
+
+    game:start_level()
+end
+
+function final(self)
+    self.druid:final()
+end
+
+function update(self, dt)
+    self.druid:update(dt)
+end
+
+function on_message(self, message_id, message, sender)
+    self.druid:on_message(message_id, message, sender)
+end
+
+function on_input(self, action_id, action)
+    return self.druid:on_input(action_id, action)
+end
+
+function on_reload(self)
+end
