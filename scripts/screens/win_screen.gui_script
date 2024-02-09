@@ -2,7 +2,6 @@ local monarch = require "monarch.monarch"
 local druid = require "druid.druid"
 local const = require("druid.const")
 local druid_style = require("scripts.modules.druid_style")
-local game = require("scripts.modules.game_logic.game")
 
 local function on_next_level_btn_click()
     print "win next click"
@@ -30,8 +29,6 @@ function init(self)
         :set_minimal_scale(0.5)
         ]]--
     }
-
-    game:start_level()
 end
 
 function final(self)

@@ -2,7 +2,7 @@ local monarch = require "monarch.monarch"
 local druid = require "druid.druid"
 local const = require("druid.const")
 local druid_style = require("scripts.modules.druid_style")
-local game = require("scripts.modules.game_logic.game")
+local game_fsm = require("scripts.modules.game_logic.game_fsm")
 
 local function on_cheat_win_btn_click()
     print "cheat win"
@@ -30,8 +30,8 @@ function init(self)
         :set_minimal_scale(0.5)
         ]]--
     }
-
-    game:start_level()
+    self.level = 2
+    game_fsm:init()
 end
 
 function final(self)
