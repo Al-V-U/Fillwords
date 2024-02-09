@@ -1,6 +1,7 @@
 local profile = require("scripts.modules.profile")
 local events = require 'scripts.modules.events'
 local yagames = require("yagames.yagames")
+local const = require("scripts.modules.const")
 
 local M = {}
 
@@ -23,6 +24,9 @@ function M.init()
 				end
 				if data.inserted_words ~= nil then
 					profile.inserted_words = data.inserted_words
+				end
+				if data.color_index ~= nil then
+					profile.color_index = data.color_index
 				end
 			end)
 		end
@@ -100,6 +104,23 @@ end
 
 function M.insert_word_color(word, color)
 	inserted_word_colors[word] = color
+end
+
+function M.get_color_index()
+	return profile.color_index
+end
+
+function M.next_color_index()
+	profile.color_index = profile.color_index + 1 <= #const.colors and
+		profile.color_index + 1 or 1
+
+	M.save_profile()
+	return profile.color_index
+end
+
+function M.set_color_index(index)
+	profile.color_index = index
+	M.save_profile()
 end
 
 function M.save_profile(fast)
