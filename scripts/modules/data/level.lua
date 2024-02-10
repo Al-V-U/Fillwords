@@ -17,4 +17,16 @@ function M.load_level()
 	M.current_level = json_table
 end
 
+function M.get_words_count()
+	if M.current_level == nil then
+		return nil
+	end
+
+	local count = 0
+	for _, _ in pairs(M.current_level.words) do
+		count = count + 1
+	end
+	return count
+end
+
 return M

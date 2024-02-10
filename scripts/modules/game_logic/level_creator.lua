@@ -1,6 +1,6 @@
-local level = require("scripts.modules.game_logic.level")
-local const = require("scripts.modules.const")
-local cfg = require("scripts.modules.cfg")
+local level = require("scripts.modules.data.level")
+local const = require("scripts.modules.data.const")
+local cfg = require("scripts.modules.data.cfg")
 
 local M = {}
 
@@ -8,29 +8,29 @@ local function setup_slot(slot, center, size)
 	local spacing = cfg.field_size / size
 	local position = vmath.vector3(
 		center.x - cfg.field_size / 2.0 + (slot.x - 1) * spacing + spacing / 2,
-		center.y - cfg.field_size / 2.0 + (slot.y - 1) * spacing + spacing / 2,
+		center.y + cfg.field_size / 2.0 - (slot.y - 1) * spacing - spacing / 2,
 		0
 	)
-	local size = vmath.vector3(
+	local cell_size = vmath.vector3(
 		spacing * cfg.field_spacing_coeff,
 		spacing * cfg.field_spacing_coeff,
 		0
 	)
 	local text_scale = vmath.vector3(
-		size.x / cfg.text_scale_coeff,
-		size.x / cfg.text_scale_coeff,
+		cell_size.x / cfg.text_scale_coeff,
+		cell_size.x / cfg.text_scale_coeff,
 		1
 	)
 
+	gui.set_color(slot.back_node, const.empty_color)
 	gui.set_position(slot.back_node, position)
-	gui.set_size(slot.back_node, size)
+	gui.set_size(slot.back_node, cell_size)
 
 	gui.set_text(slot.letter_node, slot.letter)
 	gui.set_scale(slot.letter_node, text_scale)
 end
 
 function M.create(self)
-	print("create")
 	self.slots = {}
 	local template_node = gui.get_node(const.field_letter_template)
 	local center = gui.get_position(template_node)
@@ -50,9 +50,10 @@ function M.create(self)
 				letter = letter,
 				index = index,
 				x = x,
-				y = y
+				y = y,
+				is_finished = false
 			}
-			
+
 			setup_slot(self.slots[x][y], center, size)
 		end
 	end
