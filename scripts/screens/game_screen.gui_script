@@ -15,6 +15,9 @@ function init(self)
     msg.post(".", "acquire_input_focus")
     self.druid = druid.new(self)
 
+    game_fsm.init(self)
+    gui.set_text(gui.get_node("level_num_text"), "УРОВЕНЬ " .. profile_service.get_level_num())
+
     local custom_style = self.druid:new_button("cheat_win_btn", on_cheat_win_btn_click)
     custom_style:set_style(druid_style)
 
@@ -22,8 +25,6 @@ function init(self)
         self.druid:new_text("cheat_win_text", nil, const.TEXT_ADJUST.DOWNSCALE),
         self.druid:new_text("level_num_text", nil, const.TEXT_ADJUST.DOWNSCALE),
     }
-    game_fsm.init(self)
-    gui.set_text(gui.get_node("level_num_text"), "УРОВЕНЬ " .. profile_service.get_level_num())
 end
 
 function final(self)
@@ -39,9 +40,5 @@ function on_message(self, message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
-    game_fsm.input(self, action_id, action)
-    return self.druid:on_input(action_id, action)
-end
-
-function on_reload(self)
+    return game_fsm.input(self, action_id, action)
 end

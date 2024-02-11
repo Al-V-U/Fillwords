@@ -3,6 +3,7 @@ local level = require("scripts.modules.data.level")
 local level_creator = require("scripts.modules.game_logic.level_creator")
 local profile_service = require("scripts.modules.profile_service")
 local game_play = require("scripts.modules.game_logic.game_play")
+local apply_saved = require("scripts.modules.game_logic.apply_saved")
 local monarch = require "monarch.monarch"
 
 local M ={}
@@ -18,7 +19,7 @@ local function fsm_oncreate(self)
 end
 
 local function fsm_onapply(self)
-	print "apply"
+	apply_saved.apply(self)
 	self.fsm:show_level()
 end
 
@@ -90,7 +91,9 @@ end
 function M.input(self, action_id, action)
 	if self.fsm.is(M.states.play) then
 		game_play.input(self, action_id, action)
+		return self.druid:on_input(action_id, action)
 	end
+	return false
 end
 
 return M

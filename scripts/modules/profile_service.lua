@@ -139,10 +139,12 @@ local function insert_word_color(word, color_index)
 	inserted_word_colors[word] = color_index
 end
 
-function M.insert_word(word)
-	table.insert(profile.inserted_words, word)
+function M.insert_word(word, save)
+	if save and not M.is_contains_inserted_words(word) then
+		table.insert(profile.inserted_words, word)
+	end
 	insert_word_color(word, M.get_color_index())
-	M.next_color_index()
+	M.next_color_index(save)
 end
 
 function M.get_inserted_word_color(word)
@@ -158,11 +160,13 @@ function M.get_color_index()
 	return profile.color_index
 end
 
-function M.next_color_index()
+function M.next_color_index(save)
 	profile.color_index = profile.color_index + 1 <= #const.colors and
 		profile.color_index + 1 or 1
 
-	M.save_profile()
+	if save then
+		M.save_profile()
+	end
 end
 
 function M.set_color_index(index)

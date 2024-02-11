@@ -1,9 +1,15 @@
+local cfg = require("scripts.modules.data.cfg")
 local const = require("scripts.modules.data.const")
 local level = require("scripts.modules.data.level")
 local words = require("scripts.modules.data.words")
 local profile_service = require("scripts.modules.profile_service")
 
 local M = {}
+
+local function animate_letter(slot, zoom_in)
+	local scale = zoom_in and cfg.letter_select_scale or cfg.letter_normal_scale
+	gui.animate(slot.letter_node, "scale", scale, gui.EASING_OUTCUBIC, 0.2)
+end
 
 local function check_task_words(link)
 	local word
@@ -28,7 +34,7 @@ local function check_task_words(link)
 	return false
 end
 
-local function remove_link(self)
+function M.remove_link(self, save)
 	if self.link == nil or #self.link == 0 then
 		return false
 	end
@@ -42,18 +48,20 @@ local function remove_link(self)
 	end
 	if find then
 		for _, slot in pairs(self.link) do
+			animate_letter(slot, false)
 			slot.is_finished = true
 		end
-		profile_service.insert_word(word)
+		profile_service.insert_word(word, save)
 		return true
 	end
 	for _,slot in pairs(self.link) do
+		animate_letter(slot, false)
 		gui.set_color(slot.back_node, const.empty_color)
 	end
 	return false
 end
 
-local function add_to_link(self, slot)
+function M.add_to_link(self, slot)
 	-- outside board or empty
 	if slot.is_finished then
 		return false
@@ -63,8 +71,8 @@ local function add_to_link(self, slot)
 
 	-- add the first slot to the link without any checks
 	if #self.link == 0 then
-		--msg.post(slot.id_root, "zoom_in", {color =  const.colors[profile_service.get_color_index()], fast = fast})
 		table.insert(self.link, slot)
+		animate_letter(slot, true)
 		gui.set_color(slot.back_node, color)
 		return true
 	end
@@ -80,6 +88,7 @@ local function add_to_link(self, slot)
 	-- remove the last slot of the link
 	if previous == slot then
 		self.link[#self.link] = nil
+		animate_letter(last, false)
 		gui.set_color(last.back_node, const.empty_color)
 		return true
 	end
@@ -91,6 +100,7 @@ local function add_to_link(self, slot)
 	end
 
 	table.insert(self.link, slot)
+	animate_letter(slot, true)
 	gui.set_color(slot.back_node, color)
 	return true
 end
@@ -114,20 +124,19 @@ end
 
 function M.start_play(self, callback)
 	self.level_complete_callback = callback
-	self.link = {}
 end
 
 function M.input(self, action_id, action)
 	if action.pressed or (action_id == hash("touch") and self.linking) then
 		local slot = check_input_node(self, action.x, action.y)
 		if action.released then
-			if remove_link(self) then
+			if M.remove_link(self, true) then
 				check_win(self)
 			end
 			self.linking = false
 			self.link = {}
 		elseif slot ~= nil then
-			if add_to_link(self, slot) then
+			if M.add_to_link(self, slot) then
 				self.linking = true
 			end
 		end

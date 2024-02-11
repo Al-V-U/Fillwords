@@ -40,6 +40,3 @@ end
 function on_input(self, action_id, action)
     return self.druid:on_input(action_id, action)
 end
-
-function on_reload(self)
-end

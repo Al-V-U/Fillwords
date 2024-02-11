@@ -29,4 +29,14 @@ function M.get_words_count()
 	return count
 end
 
+function M.index_to_xy(index)
+	local x = (index - 1) % M.current_level.size + 1
+	local y = math.floor((index - 1) / M.current_level.size + 1)
+	return x, y
+end
+
+function M.xy_to_index(x, y)
+	return (y - 1) * M.current_level.size + x
+end
+
 return M
