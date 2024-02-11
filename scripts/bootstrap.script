@@ -2,20 +2,30 @@ local monarch = require "monarch.monarch"
 local profile_service = require 'scripts.modules.profile_service'
 local yagames = require("yagames.yagames")
 local words = require("scripts.modules.data.words")
+local const = require("scripts.modules.data.const")
 --require("scripts.modules.utils")
 
 local time = 0
+local fade_logo_time = 0.3
+local show_logo_time = 0.5
+
+local function animate_logo(alpha, delay, callback)
+	go.animate("logo#sprite", "tint",
+		go.PLAYBACK_ONCE_FORWARD, vmath.vector4(1, 1, 1, alpha),
+		go.EASING_LINEAR, fade_logo_time, delay,
+		callback
+	)
+end
+
 local function profile_ready()
 	print "profile_ready"
-	local waiter = 0.5 - (os.clock() - time)
-	if waiter < 0 then
-		waiter = 0
+	local delay = show_logo_time - (os.clock() - time)
+	if delay < 0 then
+		delay = 0
 	end
-	go.animate("logo#sprite", "tint",
-	go.PLAYBACK_ONCE_FORWARD, vmath.vector4(1, 1, 1, 0),
-		go.EASING_LINEAR, 0.3, waiter,
+	animate_logo(0, delay,
 		function()
-			monarch.show("game_screen")
+			monarch.show(const.screens.game_screen)
 		end
 	)
 end
@@ -33,9 +43,7 @@ function init(self)
 	msg.post("@render:", "use_stretch_projection", { near = -1, far = 1 })
 
 	go.set("logo#sprite", "tint", vmath.vector4(1, 1, 1, 0))
-	go.animate("logo#sprite", "tint",
-		go.PLAYBACK_ONCE_FORWARD, vmath.vector4(1, 1, 1, 1),
-		go.EASING_LINEAR, 0.3, 0,
+	animate_logo(1, 0,
 		function()
 			time = os.clock()
 			yagames.init(init_handler)

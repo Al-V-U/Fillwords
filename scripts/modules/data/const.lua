@@ -2,6 +2,7 @@ local M = {}
 
 M.field_letter_template = hash("field_letter_template")
 M.field_letter = hash("field_letter")
+M.found_words_counter_text = hash("found_words_counter_text")
 M.dictionary_path = "/dictionary/russian_nouns.txt"
 
 M.empty_color = vmath.vector4(0.9, 0.9, 0.9, 1)
@@ -25,6 +26,11 @@ M.directions = {
 	left = 180,
 	top = 90,
 	bottom = 270
+}
+
+M.screens = {
+	game_screen = "game_screen",
+	win_screen = "win_screen"
 }
 
 return M

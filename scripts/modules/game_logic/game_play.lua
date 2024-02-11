@@ -43,7 +43,11 @@ function M.remove_link(self, save)
 	if not find then
 		local another_word = words.check_word(self.link)
 		if another_word ~= nil then
-			print("find word:", another_word)
+			if profile_service.add_found_word(another_word) then
+				--show effect
+			else
+				--show info panel - already found
+			end
 		end
 	end
 	if find then

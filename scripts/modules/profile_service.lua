@@ -22,6 +22,9 @@ local function setup_data(data)
 	if data.inserted_words ~= nil then
 		profile.inserted_words = data.inserted_words
 	end
+	if data.found_words ~= nil then
+		profile.found_words = data.found_words
+	end
 	if data.color_index ~= nil then
 		profile.color_index = data.color_index
 	end
@@ -82,6 +85,7 @@ end
 
 local function reset()
 	profile.inserted_words = {}
+	profile.found_words = {}
 	inserted_word_colors = {}
 	level_num = profile.last_finished_level_num + 1
 	M.save_profile(true)
@@ -104,18 +108,6 @@ end
 
 function M.get_found_words_counter()
 	return profile.found_words_counter
-end
-
-function M.set_found_words_counter(coins_count)
-	profile.found_words_counter = coins_count
-	events.invoke("event_found_words_counter_changed")
-	M.save_profile()
-end
-
-function M.add_found_words_counter()
-	profile.found_words_counter = profile.found_words_counter + 1
-	events.invoke("event_found_words_counter_changed")
-	M.save_profile()
 end
 
 function M.get_inserted_words()
@@ -154,6 +146,30 @@ function M.get_inserted_word_color(word)
 		end
 	end
 	return nil
+end
+
+local function is_contains_found_word(word)
+	for _, w in pairs(profile.found_words) do
+		if w == word then
+			return true
+		end
+	end
+	return false
+end
+
+local function add_found_words_counter()
+	profile.found_words_counter = profile.found_words_counter + 1
+	events.invoke("event_found_words_counter_changed")
+end
+
+function M.add_found_word(word)
+	if not is_contains_found_word(word) then
+		table.insert(profile.found_words, word)
+		add_found_words_counter()
+		M.save_profile()
+		return true
+	end
+	return false
 end
 
 function M.get_color_index()

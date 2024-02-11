@@ -4,48 +4,59 @@ local level_creator = require("scripts.modules.game_logic.level_creator")
 local profile_service = require("scripts.modules.profile_service")
 local game_play = require("scripts.modules.game_logic.game_play")
 local apply_saved = require("scripts.modules.game_logic.apply_saved")
+local found_words_counter = require("scripts.modules.game_logic.found_words_counter")
 local monarch = require "monarch.monarch"
+local const = require("scripts.modules.data.const")
 
 local M ={}
 
 local function fsm_onloading(self)
 	level.load_level()
-	self.fsm:build()
 end
 
 local function fsm_oncreate(self)
 	level_creator.create(self)
-	self.fsm:apply_saved()
 end
 
 local function fsm_onapply(self)
 	apply_saved.apply(self)
-	self.fsm:show_level()
+	found_words_counter.init()
 end
 
 local function fsm_onshow(self)
 	print "show"
-	self.fsm:play_game()
+	timer.delay(1, false,
+		function()
+			print "show end"
+			self.fsm:play_game()
+		end
+	)
 end
 
-local function fsm_onplay(self, event, from, to)
+local function fsm_onplay(self)
 	print "play"
-	game_play.start_play(self, function()
-		self.fsm:win_game()
-	end)
-	--return fsm.ASYNC -- tell machine to defer next state until we call transition
+	game_play.start_play(self,
+		function()
+			self.fsm:win_game()
+		end
+	)
 end
 
 local function fsm_onwin(self)
 	print "win"
+	found_words_counter.final()
 	profile_service.finish_level()
-	self.fsm:complete()
+	timer.delay(1, false,
+		function()
+			self.fsm:complete()
+		end
+	)
 end
 
 local function fsm_onfinish(self)
 	print("finish")
 	self.fsm = nil
-	monarch.replace("win_screen")
+	monarch.replace(const.screens.win_screen)
 end
 
 M.states = {
@@ -86,10 +97,13 @@ function M.init(self)
 	})
 
 	self.fsm:load()
+	self.fsm:build()
+	self.fsm:apply_saved()
+	self.fsm:show_level()
 end
 
 function M.input(self, action_id, action)
-	if self.fsm.is(M.states.play) then
+	if self.fsm:is(M.states.play) then
 		game_play.input(self, action_id, action)
 		return self.druid:on_input(action_id, action)
 	end
