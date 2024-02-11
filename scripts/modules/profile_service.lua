@@ -157,6 +157,14 @@ local function is_contains_found_word(word)
 	return false
 end
 
+function M.reset_found_words_counter()
+	if profile.found_words_counter ~= 0 then
+		profile.found_words_counter = 0
+		events.invoke("event_found_words_counter_changed")
+		M.save_profile()
+	end
+end
+
 local function add_found_words_counter()
 	profile.found_words_counter = profile.found_words_counter + 1
 	events.invoke("event_found_words_counter_changed")

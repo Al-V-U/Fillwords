@@ -11,6 +11,10 @@ local function on_cheat_win_btn_click()
     monarch.replace("win_screen")
 end
 
+local function on_reset_counter_btn_click()
+    profile_service.reset_found_words_counter()
+end
+
 function init(self)
     msg.post(".", "acquire_input_focus")
     self.druid = druid.new(self)
@@ -21,9 +25,13 @@ function init(self)
     local custom_style = self.druid:new_button("cheat_win_btn", on_cheat_win_btn_click)
     custom_style:set_style(druid_style)
 
+    custom_style = self.druid:new_button("reset_counter_btn", on_reset_counter_btn_click)
+    custom_style:set_style(druid_style)
+
     self.texts = {
         self.druid:new_text("cheat_win_text", nil, const.TEXT_ADJUST.DOWNSCALE),
         self.druid:new_text("level_num_text", nil, const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("reset_counter_text", nil, const.TEXT_ADJUST.DOWNSCALE),
     }
 end
 
