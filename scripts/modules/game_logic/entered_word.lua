@@ -11,22 +11,22 @@ local back_height = 100
 local back_size_offset = 60
 
 local function set_alpha(alpha)
-	const.entered_word_text_color.w = alpha
+	cfg.entered_words_text_color.w = alpha
 	back_color.w = alpha
 	gui.set_color(back_node, back_color)
-	gui.set_color(text_node, const.entered_word_text_color)
+	gui.set_color(text_node, cfg.entered_words_text_color)
 end
 
 local function animate_alpha(alpha)
-	const.entered_word_text_color.w = alpha
+	cfg.entered_words_text_color.w = alpha
 	back_color.w = alpha
 	gui.animate(back_node, "color", back_color, gui.EASING_LINEAR, 0.3)
-	gui.animate(text_node, "color", const.entered_word_text_color, gui.EASING_LINEAR, 0.3)
+	gui.animate(text_node, "color", cfg.entered_words_text_color, gui.EASING_LINEAR, 0.3)
 end
 
 function M.init()
-	back_node = gui.get_node(const.entered_word)
-	text_node = gui.get_node(const.entered_word_text)
+	back_node = gui.get_node(const.N_ENTERED_WORD)
+	text_node = gui.get_node(const.N_ENTERED_WORD_TEXT)
 	local font_name = gui.get_font(text_node)
 	font = gui.get_font_resource(font_name)
 	set_alpha(0)

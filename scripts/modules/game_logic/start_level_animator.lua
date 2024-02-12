@@ -8,7 +8,7 @@ function M.animate(callback)
 	for _, s in pairs(game_play_data.slots) do
 		for _, slot in pairs(s) do
 			gui.animate(slot.back_node, "scale",
-				const.vector3_one, gui.EASING_OUTCUBIC,
+				const.VECTOR_3_ONE, gui.EASING_OUTCUBIC,
 				cfg.show_level_time, 0, callback
 			)
 			callback = nil

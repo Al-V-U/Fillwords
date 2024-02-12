@@ -4,7 +4,7 @@ local M = {}
 local words = {}
 
 function M.load_words()
-	local file = sys.load_resource(const.dictionary_path)
+	local file = sys.load_resource(const.DICTIONARY_PATH)
 	if file == nil then
 		return
 	end

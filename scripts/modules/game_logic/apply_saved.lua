@@ -15,7 +15,7 @@ local function calc_start_color_index()
 	for i = 1, inserted_words_count do
 		color_index = color_index - 1
 		if color_index < 1 then
-			color_index = #const.colors
+			color_index = #const.COLORS
 		end
 	end
 	profile_service.set_color_index(color_index)

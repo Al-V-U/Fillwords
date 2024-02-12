@@ -61,7 +61,7 @@ local function fsm_onfinish(self)
 	print("finish")
 	self.fsm = nil
 	game_play_data.clear()
-	monarch.replace(const.screens.win_screen)
+	monarch.replace(const.SCREENS.WIN_SCREEN)
 end
 
 M.states = {
@@ -113,6 +113,12 @@ function M.input(self, action_id, action)
 		return self.druid:on_input(action_id, action)
 	end
 	return false
+end
+
+function M.layout_changed()
+	level_creator.setup_slots()
+	apply_saved.apply()
+	entered_word.init()
 end
 
 return M

@@ -35,7 +35,7 @@ local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to
 		0
 	)
 
-	gui.set_color(slot.back_node, const.empty_color)
+	gui.set_color(slot.back_node, const.EMPTY_COLOR)
 	gui.set_position(slot.back_node, position)
 	gui.set_size(slot.back_node, cell_size)
 
@@ -47,17 +47,30 @@ local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to
 	gui.set_enabled(slot.connector_center_node, false)
 
 	if scale_to_zero then
-		gui.set_scale(slot.back_node, const.vector3_zero)
+		gui.set_scale(slot.back_node, const.VECTOR_3_ZERO)
 	end
+end
+
+function M.setup_slots(scale_to_zero)
+	scale_to_zero = scale_to_zero == nil and false or scale_to_zero
+	local template_node = gui.get_node(const.N_FIELD_LETTER_BACK)
+	local center = gui.get_position(template_node)
+	local size = level.current_level.size
+	local spacing, cell_size, field_size = calc_slot_param(size)
+
+	for _, s in pairs(game_play_data.slots) do
+		for _, slot in pairs(s) do
+			slot.is_finished = false
+			setup_slot(slot, center, spacing, cell_size, field_size, scale_to_zero)
+		end
+	end
+	gui.set_enabled(template_node, false)
 end
 
 function M.create(self)
 	game_play_data.clear()
-	local template_node = gui.get_node(const.field_letter_template)
-	local center = gui.get_position(template_node)
+	local template_node = gui.get_node(const.N_FIELD_LETTER_BACK)
 	local size = level.current_level.size
-
-	local spacing, cell_size, field_size = calc_slot_param(size)
 
 	for y = 1, size do
 		for x = 1, size do
@@ -68,56 +81,19 @@ function M.create(self)
 			local letter = utf8.upper(level.current_level.letters[index])
 			local nodes = gui.clone_tree(template_node)
 			game_play_data.slots[x][y] = {
-				back_node = nodes[const.field_letter_template],
-				letter_node = nodes[const.field_letter_text],
-				connector_center_node = nodes[const.connector_center],
-				connector_node = nodes[const.connector],
+				back_node = nodes[const.N_FIELD_LETTER_BACK],
+				letter_node = nodes[const.N_FIELD_LETTER_TEXT],
+				connector_center_node = nodes[const.N_CONNECTOR_CENTER],
+				connector_node = nodes[const.N_CONNECTOR],
 				letter = letter,
 				index = index,
 				x = x,
 				y = y,
 				is_finished = false
 			}
-
-			setup_slot(game_play_data.slots[x][y], center, spacing, cell_size, field_size, true)
 		end
 	end
-	gui.set_enabled(template_node, false)
-end
-
-
-local function recalc(slot, center, spacing, cell_size, field_size)
-	local position = vmath.vector3(
-		center.x - field_size / 2.0 + (slot.x - 1) * spacing + spacing / 2,
-		center.y + field_size / 2.0 - (slot.y - 1) * spacing - spacing / 2,
-		0
-	)
-
-	--gui.set_color(slot.back_node, const.empty_color)
-	gui.set_position(slot.back_node, position)
-	gui.set_size(slot.back_node, cell_size)
-
-	gui.set_text(slot.letter_node, slot.letter)
-	gui.set_scale(slot.letter_node, cfg.letter_normal_scale)
-
-	gui.set_position(slot.connector_node, vmath.vector3(cell_size.x / 2, 0, 0))
-	gui.set_size(slot.connector_node, vmath.vector3((spacing - cell_size.x) * 2, cell_size.y, 0))
-end
-
-function M.setup_slots()
-	local template_node = gui.get_node(const.field_letter_template)
-	local center = gui.get_position(template_node)
-	print("center", center)
-	local size = level.current_level.size
-	local spacing, cell_size, field_size = calc_slot_param(size)
-
-	for _, s in pairs(game_play_data.slots) do
-		for _, slot in pairs(s) do
-			slot.is_finished = false
-			setup_slot(slot, center, spacing, cell_size, field_size, false)
-		end
-	end
-	gui.set_enabled(template_node, false)
+	M.setup_slots(true)
 end
 
 return M

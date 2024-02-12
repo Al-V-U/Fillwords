@@ -25,7 +25,7 @@ local function profile_ready()
 	end
 	animate_logo(0, delay,
 		function()
-			monarch.show(const.screens.game_screen)
+			monarch.show(const.SCREENS.GAME_SCREEN)
 		end
 	)
 end

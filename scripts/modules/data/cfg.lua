@@ -9,5 +9,6 @@ M.letter_select_scale_coeff = 1.1
 M.letter_normal_scale = nil
 M.letter_select_scale = nil
 M.show_level_time = 0.4
+M.entered_words_text_color = vmath.vector4(0, 0, 0, 1)
 
 return M

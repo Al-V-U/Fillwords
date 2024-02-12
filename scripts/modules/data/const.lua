@@ -1,21 +1,24 @@
 local M = {}
 
-M.field_letter_template = hash("field_letter_template")
-M.field_letter_text = hash("field_letter_text")
-M.connector_center = hash("connector_center")
-M.connector = hash("connector")
-M.found_words_counter_text = hash("found_words_counter_text")
-M.entered_word = hash("entered_word")
-M.entered_word_text = hash("entered_word_text")
+M.N_FIELD_LETTER_BACK = hash("field_letter_back")
+M.N_FIELD_LETTER_TEXT = hash("field_letter_text")
+M.N_CONNECTOR_CENTER = hash("connector_center")
+M.N_CONNECTOR = hash("connector")
+M.N_FOUND_WORDS_COUNTER_TEXT = hash("found_words_counter_text")
+M.N_ENTERED_WORD = hash("entered_word")
+M.N_ENTERED_WORD_TEXT = hash("entered_word_text")
 
-M.dictionary_path = "/dictionary/russian_nouns.txt"
+M.MSG_LAYOUT_CHANGED = hash("layout_changed")
+M.MSG_LAYOUT_CHANGED = hash("layout_changed")
+M.MSG_ID_PORTRAIT = hash("MyPortrait")
 
-M.vector3_one = vmath.vector3(1, 1, 1)
-M.vector3_zero = vmath.vector3(0, 0, 0)
+M.DICTIONARY_PATH = "/dictionary/russian_nouns.txt"
 
-M.entered_word_text_color = vmath.vector4(0, 0, 0, 1)
-M.empty_color = vmath.vector4(0.9, 0.9, 0.9, 1)
-M.colors = {
+M.VECTOR_3_ONE = vmath.vector3(1, 1, 1)
+M.VECTOR_3_ZERO = vmath.vector3(0, 0, 0)
+
+M.EMPTY_COLOR = vmath.vector4(0.9, 0.9, 0.9, 1)
+M.COLORS = {
 	vmath.vector4(0.92, 0.41, 0.48, 1),
 	vmath.vector4(0.53, 0.74, 0.43, 1),
 	vmath.vector4(0.98, 0.61, 0.61, 1),
@@ -29,17 +32,17 @@ M.colors = {
 	vmath.vector4(0.73, 0.67, 0.96, 1)
 }
 
-M.directions = {
-	none = -1,
-	right = 0,
-	left = 180,
-	top = 90,
-	bottom = 270
+M.DIRECTIONS = {
+	NONE = -1,
+	RIGHT = 0,
+	LEFT = 180,
+	TOP = 90,
+	BOTTOM = 270
 }
 
-M.screens = {
-	game_screen = "game_screen",
-	win_screen = "win_screen"
+M.SCREENS = {
+	GAME_SCREEN = "game_screen",
+	WIN_SCREEN = "win_screen"
 }
 
 return M

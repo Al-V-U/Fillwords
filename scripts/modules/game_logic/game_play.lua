@@ -15,7 +15,7 @@ local function animate_letter(slot, zoom_in)
 end
 
 local function setup_connector(slot, direction, color)
-	if direction == const.directions.none then
+	if direction == const.DIRECTIONS.NONE then
 		gui.set_enabled(slot.connector_center_node, false)
 		return
 	end
@@ -73,8 +73,8 @@ function M.remove_link(save)
 	end
 	for _,slot in pairs(game_play_data.link) do
 		animate_letter(slot, false)
-		gui.set_color(slot.back_node, const.empty_color)
-		setup_connector(slot, const.directions.none)
+		gui.set_color(slot.back_node, const.EMPTY_COLOR)
+		setup_connector(slot, const.DIRECTIONS.NONE)
 	end
 	return false
 end
@@ -93,7 +93,7 @@ function M.add_to_link(slot)
 		return false
 	end
 
-	local color = const.colors[profile_service.get_color_index()]
+	local color = const.COLORS[profile_service.get_color_index()]
 
 	-- add the first slot to the link without any checks
 	if #game_play_data.link == 0 then
@@ -112,8 +112,8 @@ function M.add_to_link(slot)
 	-- remove the last slot of the link
 	if previous == slot then
 		game_play_data.link[#game_play_data.link] = nil
-		to_link(last, const.empty_color, false)
-		setup_connector(slot, const.directions.none)
+		to_link(last, const.EMPTY_COLOR, false)
+		setup_connector(slot, const.DIRECTIONS.NONE)
 		return true, color
 	end
 	-- don't try to add the same slot twice

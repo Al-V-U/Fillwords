@@ -185,7 +185,7 @@ function M.get_color_index()
 end
 
 function M.next_color_index(save)
-	profile.color_index = profile.color_index + 1 <= #const.colors and
+	profile.color_index = profile.color_index + 1 <= #const.COLORS and
 		profile.color_index + 1 or 1
 
 	if save then

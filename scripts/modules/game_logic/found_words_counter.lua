@@ -11,13 +11,12 @@ local function on_counter_changed()
 end
 
 function M.init()
-	text_node = gui.get_node(const.found_words_counter_text)
+	text_node = gui.get_node(const.N_FOUND_WORDS_COUNTER_TEXT)
 	events.subscribe("event_found_words_counter_changed", on_counter_changed)
 	on_counter_changed()
 end
 
 function M.final()
-	text_node = gui.get_node(const.found_words_counter_text)
 	events.unsubscribe("event_found_words_counter_changed", on_counter_changed)
 end
 

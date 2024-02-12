@@ -13,7 +13,7 @@ local entered_word = require("scripts.modules.game_logic.entered_word")
 local function on_cheat_win_btn_click()
     print "cheat win"
     profile_service.finish_level()
-    monarch.replace(const.screens.win_screen)
+    monarch.replace(const.SCREENS.WIN_SCREEN)
 end
 
 local function on_reset_counter_btn_click()
@@ -50,16 +50,9 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == hash("layout_changed") then
-        print("layout changed")
-        if message.id == hash("MyLandscape") then
-            cfg.is_portrait = false
-        else
-            cfg.is_portrait = true
-        end
-        level_creator.setup_slots()
-        apply_saved.apply()
-        entered_word.init()
+    if message_id == const.MSG_LAYOUT_CHANGED then
+        cfg.is_portrait = message.id == const.MSG_ID_PORTRAIT and true or false
+        game_fsm.layout_changed()
     end
     self.druid:on_message(message_id, message, sender)
 end

@@ -9,11 +9,11 @@ end
 local M = {}
 
 function M.calc_direction(dif_x, dif_y)
-	local dir = const.directions.none
+	local dir = const.DIRECTIONS.NONE
 	if dif_x ~= 0 then
-		dir = dif_x < 0 and const.directions.right or const.directions.left
+		dir = dif_x < 0 and const.DIRECTIONS.RIGHT or const.DIRECTIONS.LEFT
 	elseif dif_y ~= 0 then
-		dir = dif_y < 0 and const.directions.bottom or const.directions.top
+		dir = dif_y < 0 and const.DIRECTIONS.BOTTOM or const.DIRECTIONS.TOP
 	end
 
 	return dir
