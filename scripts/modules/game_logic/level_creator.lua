@@ -1,6 +1,7 @@
 local level = require("scripts.modules.data.level")
 local const = require("scripts.modules.data.const")
 local cfg = require("scripts.modules.data.cfg")
+local game_play_data = require("scripts.modules.data.game_play_data")
 
 local M = {}
 
@@ -43,11 +44,12 @@ local function setup_slot(slot, center, spacing, cell_size)
 	gui.set_size(slot.connector_node, vmath.vector3((spacing - cell_size.x) * 2, cell_size.y, 0))
 	gui.set_enabled(slot.connector_center_node, false)
 
-	gui.set_scale(slot.back_node, vmath.vector3(0, 0, 1))
+	gui.set_scale(slot.back_node, const.vector3_zero)
 end
 
-function M.create(self)
-	self.slots = {}
+function M.create()
+	game_play_data.clear()
+
 	local template_node = gui.get_node(const.field_letter_template)
 	local center = gui.get_position(template_node)
 	local size = level.current_level.size
@@ -57,12 +59,12 @@ function M.create(self)
 	for y = 1, size do
 		for x = 1, size do
 			if y == 1 then
-				self.slots[x] = {}
+				game_play_data.slots[x] = {}
 			end
 			local index = (y - 1) * size + x
 			local letter = utf8.upper(level.current_level.letters[index])
 			local nodes = gui.clone_tree(template_node)
-			self.slots[x][y] = {
+			game_play_data.slots[x][y] = {
 				back_node = nodes[const.field_letter_template],
 				letter_node = nodes[const.field_letter],
 				connector_center_node = nodes[const.connector_center],
@@ -74,7 +76,7 @@ function M.create(self)
 				is_finished = false
 			}
 
-			setup_slot(self.slots[x][y], center, spacing, cell_size)
+			setup_slot(game_play_data.slots[x][y], center, spacing, cell_size)
 		end
 	end
 	gui.set_enabled(template_node, false)

@@ -6,27 +6,30 @@ local game_play = require("scripts.modules.game_logic.game_play")
 local apply_saved = require("scripts.modules.game_logic.apply_saved")
 local start_level_animator = require("scripts.modules.game_logic.start_level_animator")
 local found_words_counter = require("scripts.modules.game_logic.found_words_counter")
+local entered_word = require("scripts.modules.game_logic.entered_word")
 local monarch = require "monarch.monarch"
 local const = require("scripts.modules.data.const")
+local game_play_data = require("scripts.modules.data.game_play_data")
 
 local M ={}
 
-local function fsm_onloading(self)
+local function fsm_onloading()
+	entered_word.init()
 	level.load_level()
 end
 
-local function fsm_oncreate(self)
-	level_creator.create(self)
+local function fsm_oncreate()
+	level_creator.create()
 end
 
-local function fsm_onapply(self)
-	apply_saved.apply(self)
+local function fsm_onapply()
+	apply_saved.apply()
 	found_words_counter.init()
 end
 
 local function fsm_onshow(self)
 	print "show"
-	start_level_animator.animate(self,
+	start_level_animator.animate(
 		function()
 			print "show end"
 			self.fsm:play_game()
@@ -57,6 +60,7 @@ end
 local function fsm_onfinish(self)
 	print("finish")
 	self.fsm = nil
+	game_play_data.clear()
 	monarch.replace(const.screens.win_screen)
 end
 
@@ -87,9 +91,9 @@ function M.init(self)
 		},
 
 		callbacks = {
-			onloading = function(self, event, from, to) fsm_onloading(game_screen_self) end,
-			oncreate = function(self, event, from, to) fsm_oncreate(game_screen_self) end,
-			onapply = function(self, event, from, to) fsm_onapply(game_screen_self) end,
+			onloading = function(self, event, from, to) fsm_onloading() end,
+			oncreate = function(self, event, from, to) fsm_oncreate() end,
+			onapply = function(self, event, from, to) fsm_onapply() end,
 			onshow = function(self, event, from, to) fsm_onshow(game_screen_self) end,
 			onplay = function(self, event, from, to) fsm_onplay(game_screen_self) end,
 			onwin = function(self, event, from, to) fsm_onwin(game_screen_self) end,

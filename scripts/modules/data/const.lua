@@ -5,8 +5,15 @@ M.field_letter = hash("field_letter")
 M.connector_center = hash("connector_center")
 M.connector = hash("connector")
 M.found_words_counter_text = hash("found_words_counter_text")
+M.entered_word = hash("entered_word")
+M.entered_word_text = hash("entered_word_text")
+
 M.dictionary_path = "/dictionary/russian_nouns.txt"
 
+M.vector3_one = vmath.vector3(1, 1, 1)
+M.vector3_zero = vmath.vector3(0, 0, 0)
+
+M.entered_word_text_color = vmath.vector4(0, 0, 0, 1)
 M.empty_color = vmath.vector4(0.9, 0.9, 0.9, 1)
 M.colors = {
 	vmath.vector4(0.92, 0.41, 0.48, 1),
