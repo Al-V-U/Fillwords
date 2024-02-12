@@ -38,6 +38,12 @@ local function setup_slot(slot, center, spacing, cell_size)
 
 	gui.set_text(slot.letter_node, slot.letter)
 	gui.set_scale(slot.letter_node, cfg.letter_normal_scale)
+
+	gui.set_position(slot.connector_node, vmath.vector3(cell_size.x / 2, 0, 0))
+	gui.set_size(slot.connector_node, vmath.vector3((spacing - cell_size.x) * 2, cell_size.y, 0))
+	gui.set_enabled(slot.connector_center_node, false)
+
+	gui.set_scale(slot.back_node, vmath.vector3(0, 0, 1))
 end
 
 function M.create(self)
@@ -59,6 +65,8 @@ function M.create(self)
 			self.slots[x][y] = {
 				back_node = nodes[const.field_letter_template],
 				letter_node = nodes[const.field_letter],
+				connector_center_node = nodes[const.connector_center],
+				connector_node = nodes[const.connector],
 				letter = letter,
 				index = index,
 				x = x,

@@ -1,14 +1,15 @@
 local monarch = require "monarch.monarch"
 local druid = require "druid.druid"
-local const = require("druid.const")
+local druid_const = require("druid.const")
 local druid_style = require("scripts.modules.druid_style")
 local game_fsm = require("scripts.modules.game_logic.game_fsm")
 local profile_service = require("scripts.modules.profile_service")
+local const = require("scripts.modules.data.const")
 
 local function on_cheat_win_btn_click()
     print "cheat win"
     profile_service.finish_level()
-    monarch.replace("win_screen")
+    monarch.replace(const.screens.win_screen)
 end
 
 local function on_reset_counter_btn_click()
@@ -29,9 +30,9 @@ function init(self)
     custom_style:set_style(druid_style)
 
     self.texts = {
-        self.druid:new_text("cheat_win_text", nil, const.TEXT_ADJUST.DOWNSCALE),
-        self.druid:new_text("level_num_text", nil, const.TEXT_ADJUST.DOWNSCALE),
-        self.druid:new_text("reset_counter_text", nil, const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("cheat_win_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("level_num_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("reset_counter_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
     }
 end
 

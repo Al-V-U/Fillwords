@@ -2,6 +2,8 @@ local M = {}
 
 M.field_letter_template = hash("field_letter_template")
 M.field_letter = hash("field_letter")
+M.connector_center = hash("connector_center")
+M.connector = hash("connector")
 M.found_words_counter_text = hash("found_words_counter_text")
 M.dictionary_path = "/dictionary/russian_nouns.txt"
 

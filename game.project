@@ -43,7 +43,8 @@ show_made_with_defold = 0
 show_fullscreen_button = 0
 cssfile = /builtins/manifests/web/dark_theme.css
 scale_mode = stretch
-splash_image = /assets/images/logo.png
+splash_image = 
+htmlfile = /builtins/manifests/web/engine_template.html
 
 [label]
 max_count = 4096

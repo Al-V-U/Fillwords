@@ -2,6 +2,7 @@ local cfg = require("scripts.modules.data.cfg")
 local const = require("scripts.modules.data.const")
 local level = require("scripts.modules.data.level")
 local words = require("scripts.modules.data.words")
+local utils = require("scripts.modules.utils")
 local profile_service = require("scripts.modules.profile_service")
 
 local M = {}
@@ -9,6 +10,16 @@ local M = {}
 local function animate_letter(slot, zoom_in)
 	local scale = zoom_in and cfg.letter_select_scale or cfg.letter_normal_scale
 	gui.animate(slot.letter_node, "scale", scale, gui.EASING_OUTCUBIC, 0.2)
+end
+
+local function setup_connector(slot, direction, color)
+	if direction == const.directions.none then
+		gui.set_enabled(slot.connector_center_node, false)
+		return
+	end
+	gui.set_enabled(slot.connector_center_node, true)
+	gui.set_color(slot.connector_node, color)
+	gui.set_rotation(slot.connector_center_node, vmath.quat_rotation_z(math.rad(direction)))
 end
 
 local function check_task_words(link)
@@ -61,6 +72,7 @@ function M.remove_link(self, save)
 	for _,slot in pairs(self.link) do
 		animate_letter(slot, false)
 		gui.set_color(slot.back_node, const.empty_color)
+		setup_connector(slot, const.directions.none)
 	end
 	return false
 end
@@ -94,6 +106,7 @@ function M.add_to_link(self, slot)
 		self.link[#self.link] = nil
 		animate_letter(last, false)
 		gui.set_color(last.back_node, const.empty_color)
+		setup_connector(slot, const.directions.none)
 		return true
 	end
 	-- don't try to add the same slot twice
@@ -106,6 +119,8 @@ function M.add_to_link(self, slot)
 	table.insert(self.link, slot)
 	animate_letter(slot, true)
 	gui.set_color(slot.back_node, color)
+	local direction = utils.calc_direction(last.x - slot.x, last.y - slot.y)
+	setup_connector(last, direction, color)
 	return true
 end
 

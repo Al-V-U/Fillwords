@@ -4,6 +4,7 @@ local level_creator = require("scripts.modules.game_logic.level_creator")
 local profile_service = require("scripts.modules.profile_service")
 local game_play = require("scripts.modules.game_logic.game_play")
 local apply_saved = require("scripts.modules.game_logic.apply_saved")
+local start_level_animator = require("scripts.modules.game_logic.start_level_animator")
 local found_words_counter = require("scripts.modules.game_logic.found_words_counter")
 local monarch = require "monarch.monarch"
 local const = require("scripts.modules.data.const")
@@ -25,7 +26,7 @@ end
 
 local function fsm_onshow(self)
 	print "show"
-	timer.delay(1, false,
+	start_level_animator.animate(self,
 		function()
 			print "show end"
 			self.fsm:play_game()
