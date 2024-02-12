@@ -18,8 +18,8 @@ local function fsm_onloading()
 	level.load_level()
 end
 
-local function fsm_oncreate()
-	level_creator.create()
+local function fsm_oncreate(self)
+	level_creator.create(self)
 end
 
 local function fsm_onapply()
@@ -92,7 +92,7 @@ function M.init(self)
 
 		callbacks = {
 			onloading = function(self, event, from, to) fsm_onloading() end,
-			oncreate = function(self, event, from, to) fsm_oncreate() end,
+			oncreate = function(self, event, from, to) fsm_oncreate(game_screen_self) end,
 			onapply = function(self, event, from, to) fsm_onapply() end,
 			onshow = function(self, event, from, to) fsm_onshow(game_screen_self) end,
 			onplay = function(self, event, from, to) fsm_onplay(game_screen_self) end,

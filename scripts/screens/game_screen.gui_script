@@ -5,6 +5,10 @@ local druid_style = require("scripts.modules.druid_style")
 local game_fsm = require("scripts.modules.game_logic.game_fsm")
 local profile_service = require("scripts.modules.profile_service")
 local const = require("scripts.modules.data.const")
+local cfg = require("scripts.modules.data.cfg")
+local level_creator = require("scripts.modules.game_logic.level_creator")
+local apply_saved = require("scripts.modules.game_logic.apply_saved")
+local entered_word = require("scripts.modules.game_logic.entered_word")
 
 local function on_cheat_win_btn_click()
     print "cheat win"
@@ -33,6 +37,7 @@ function init(self)
         self.druid:new_text("cheat_win_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
         self.druid:new_text("level_num_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
         self.druid:new_text("reset_counter_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("found_words_counter_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
     }
 end
 
@@ -45,6 +50,17 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+    if message_id == hash("layout_changed") then
+        print("layout changed")
+        if message.id == hash("MyLandscape") then
+            cfg.is_portrait = false
+        else
+            cfg.is_portrait = true
+        end
+        level_creator.setup_slots()
+        apply_saved.apply()
+        entered_word.init()
+    end
     self.druid:on_message(message_id, message, sender)
 end
 
