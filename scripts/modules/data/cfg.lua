@@ -9,6 +9,7 @@ M.text_scale_coeff = 160
 M.letter_select_scale_coeff = 1.1
 M.letter_normal_scale = nil
 M.letter_select_scale = nil
+M.cell_size = nil
 M.show_level_time = 0.4
 M.entered_words_text_color = vmath.vector4(0, 0, 0, 1)
 
@@ -18,6 +19,7 @@ M.win_anim_scale_down_time = 0.06
 M.win_anim_letter_delay = 0.06
 
 M.fly_move_time = 0.4
+M.fly_scale = vmath.vector3(0.4, 0.4, 1)
 M.fly_scale_time = 0.3
 M.fly_scale_delay = 0.2
 

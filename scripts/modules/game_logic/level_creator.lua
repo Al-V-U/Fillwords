@@ -10,14 +10,14 @@ local function calc_slot_param(size)
 	print("field_size", field_size)
 	local spacing = field_size / size
 
-	local cell_size = vmath.vector3(
+	cfg.cell_size = vmath.vector3(
 		spacing * cfg.field_spacing_coeff,
 		spacing * cfg.field_spacing_coeff,
 		0
 	)
 	cfg.letter_normal_scale = vmath.vector3(
-		cell_size.x / cfg.text_scale_coeff,
-		cell_size.x / cfg.text_scale_coeff,
+		cfg.cell_size.x / cfg.text_scale_coeff,
+		cfg.cell_size.x / cfg.text_scale_coeff,
 		1
 	)
 	cfg.letter_select_scale = vmath.vector3(
@@ -25,7 +25,7 @@ local function calc_slot_param(size)
 		cfg.letter_normal_scale.y * cfg.letter_select_scale_coeff,
 		1
 	)
-	return spacing, cell_size, field_size
+	return spacing, field_size
 end
 
 local function setup_connector(slot, direction, color)
@@ -38,7 +38,7 @@ local function setup_connector(slot, direction, color)
 	gui.set_rotation(slot.connector_center_node, vmath.quat_rotation_z(math.rad(direction)))
 end
 
-local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to_zero)
+local function setup_slot(slot, center, spacing, field_size, scale_to_zero)
 	local position = vmath.vector3(
 		center.x - field_size / 2.0 + (slot.x - 1) * spacing + spacing / 2,
 		center.y + field_size / 2.0 - (slot.y - 1) * spacing - spacing / 2,
@@ -47,13 +47,14 @@ local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to
 
 	gui.set_color(slot.back_node, slot.back_color)
 	gui.set_position(slot.back_node, position)
-	gui.set_size(slot.back_node, cell_size)
+	gui.set_size(slot.back_node, cfg.cell_size)
 
 	gui.set_text(slot.letter_node, slot.letter)
 	gui.set_scale(slot.letter_node, cfg.letter_normal_scale)
 
-	gui.set_position(slot.connector_node, vmath.vector3(cell_size.x / 2, 0, 0))
-	gui.set_size(slot.connector_node, vmath.vector3((spacing - cell_size.x) * 2, cell_size.y, 0))
+	gui.set_position(slot.connector_node, vmath.vector3(cfg.cell_size.x / 2, 0, 0))
+	gui.set_size(slot.connector_node, vmath.vector3((spacing - cfg.cell_size.x) * 2,
+		 cfg.cell_size.y, 0))
 
 	setup_connector(slot, slot.connector_direction, slot.back_color)
 
@@ -67,11 +68,11 @@ function M.setup_slots(scale_to_zero)
 	local template_node = gui.get_node(const.N_FIELD_LETTER_BACK)
 	local center = gui.get_position(template_node)
 	local size = level.current_level.size
-	local spacing, cell_size, field_size = calc_slot_param(size)
+	local spacing, field_size = calc_slot_param(size)
 
 	for _, s in pairs(game_play_data.slots) do
 		for _, slot in pairs(s) do
-			setup_slot(slot, center, spacing, cell_size, field_size, scale_to_zero)
+			setup_slot(slot, center, spacing, field_size, scale_to_zero)
 		end
 	end
 	gui.set_enabled(template_node, false)

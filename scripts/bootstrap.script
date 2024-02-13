@@ -40,8 +40,9 @@ local function init_handler(self, err)
 end
 
 function init(self)
+	--monarch.debug()
 	msg.post("@render:", "use_stretch_projection", { near = -1, far = 1 })
-	msg.post("#", "init_monarch") -- wait until init() has been called for all screen.script instances
+	msg.post("#", "init_monarch")
 
 	go.set("logo#sprite", "tint", vmath.vector4(1, 1, 1, 0))
 	animate_logo(1, 0,
@@ -51,4 +52,10 @@ function init(self)
 			words.load_words()
 		end
 	)
+
+	monarch.add_listener()
+end
+
+function final(self)
+	monarch.remove_listener()
 end
