@@ -4,10 +4,79 @@ local druid_const = require("druid.const")
 local const = require("scripts.modules.data.const")
 local druid_style = require("scripts.modules.druid_style")
 local profile_service = require("scripts.modules.profile_service")
+local cfg = require("scripts.modules.data.cfg")
+
+local level_items = {}
+local grid_scroll = nil
+local grid = nil
 
 local function on_next_level_btn_click()
     print "win next click"
     monarch.replace(const.SCREENS.GAME_SCREEN)
+end
+
+local function setup_level_items(to_item)
+    for i = 1, cfg.levels_count do
+        gui.set_text(level_items[i].text_node, "Уровень " .. i)
+        if level_items[i].opened then
+            gui.set_enabled(level_items[i].check_node, false)
+            gui.play_flipbook(level_items[i].back_node, "IconButton_Small_Orange_Circle")
+        elseif not level_items[i].completed then
+            gui.set_enabled(level_items[i].check_node, false)
+            gui.set_alpha(level_items[i].back_node, 0.7)
+            gui.set_alpha(level_items[i].text_node, 0.7)
+            gui.play_flipbook(level_items[i].back_node, "IconButton_Small_Background_Circle")
+        else
+            gui.set_enabled(level_items[i].check_node, true)
+        end
+    end
+
+    local prefab = gui.get_node("level_item_prefab")
+    gui.set_enabled(prefab, false)
+
+    grid_scroll:set_size(grid:get_size())
+
+    grid_scroll:scroll_to(level_items[to_item].position, true)
+end
+
+local function init_scroll_with_grid(self)
+    local prefab = gui.get_node("level_item_prefab")
+
+    grid_scroll = self.druid:new_scroll("scroll_with_grid_size", "grid_content")
+    grid_scroll:set_style(druid_style)
+    grid = self.druid:new_static_grid("grid_content", "level_item_prefab", cfg.levels_count)
+
+    local completed_level_count = profile_service.get_level_num() - 1
+
+    for i = 1, cfg.levels_count do
+        local clone_prefab = gui.clone_tree(prefab)
+
+        grid:add(clone_prefab["level_item_prefab"])
+
+        level_items[i] = {
+            position = gui.get_position(clone_prefab["level_item_prefab"]),
+            text = "Уровень " .. i,
+            completed = i <= completed_level_count,
+            opened = i == completed_level_count + 1,
+            text_node = clone_prefab["level_item_text"],
+            back_node = clone_prefab["level_item_back"],
+            check_node = clone_prefab["level_item_check"],
+        }
+    end
+
+    gui.set_alpha(level_items[completed_level_count].check_node, 0)
+    gui.set_scale(level_items[completed_level_count].check_node, vmath.vector3(3, 3, 1))
+    gui.animate(level_items[completed_level_count].check_node, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_LINEAR, 0.4, 0.3)
+    gui.animate(level_items[completed_level_count].check_node, "scale", vmath.vector3(1, 1, 1), gui.EASING_OUTELASTIC, 0.4, 0.3)
+    setup_level_items(completed_level_count)
+
+    if completed_level_count < cfg.levels_count then
+        timer.delay(0.7, false,
+            function()
+                grid_scroll:scroll_to(level_items[completed_level_count + 1].position)
+            end
+        )
+    end
 end
 
 function init(self)
@@ -15,8 +84,8 @@ function init(self)
 
     self.druid = druid.new(self)
 
-    local custom_style = self.druid:new_button("next_level_btn", on_next_level_btn_click)
-    custom_style:set_style(druid_style)
+    local next_btn = self.druid:new_button("next_level_btn", on_next_level_btn_click)
+    next_btn:set_style(druid_style)
 
     self.texts = {
         self.druid:new_text("next_level_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
@@ -24,6 +93,9 @@ function init(self)
     }
 
     gui.set_text(gui.get_node("level_num_text"), "УРОВЕНЬ " .. profile_service.get_level_num() - 1)
+
+    --scroll
+    init_scroll_with_grid(self)
 end
 
 function final(self)
@@ -35,6 +107,14 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+    if message_id == const.MSG_LAYOUT_CHANGED then
+        cfg.is_portrait = message.id == const.MSG_ID_PORTRAIT and true or false
+        local cur_level = profile_service.get_level_num()
+        if cur_level > 5 then
+            cur_level = 5
+        end
+        setup_level_items(cur_level)
+    end
     self.druid:on_message(message_id, message, sender)
 end
 

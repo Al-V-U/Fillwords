@@ -1,8 +1,9 @@
 local M = {}
 
+M.levels_count = 5
 M.is_portrait = false
 M.field_size_landscape = 801
-M.field_size_portrait = 960
+M.field_size_portrait = 1002
 M.field_spacing_coeff = 0.95
 M.text_scale_coeff = 160
 M.letter_select_scale_coeff = 1.1

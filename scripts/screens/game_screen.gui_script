@@ -6,9 +6,6 @@ local game_fsm = require("scripts.modules.game_logic.game_fsm")
 local profile_service = require("scripts.modules.profile_service")
 local const = require("scripts.modules.data.const")
 local cfg = require("scripts.modules.data.cfg")
-local level_creator = require("scripts.modules.game_logic.level_creator")
-local apply_saved = require("scripts.modules.game_logic.apply_saved")
-local entered_word = require("scripts.modules.game_logic.entered_word")
 
 local function on_cheat_win_btn_click()
     print "cheat win"
@@ -27,11 +24,11 @@ function init(self)
     game_fsm.init(self)
     gui.set_text(gui.get_node("level_num_text"), "УРОВЕНЬ " .. profile_service.get_level_num())
 
-    local custom_style = self.druid:new_button("cheat_win_btn", on_cheat_win_btn_click)
-    custom_style:set_style(druid_style)
+    local cheat_btn = self.druid:new_button("cheat_win_btn", on_cheat_win_btn_click)
+    cheat_btn:set_style(druid_style)
 
-    custom_style = self.druid:new_button("reset_counter_btn", on_reset_counter_btn_click)
-    custom_style:set_style(druid_style)
+    local reset_btn = self.druid:new_button("reset_counter_btn", on_reset_counter_btn_click)
+    reset_btn:set_style(druid_style)
 
     self.texts = {
         self.druid:new_text("cheat_win_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),

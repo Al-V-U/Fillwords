@@ -117,7 +117,6 @@ end
 
 function M.layout_changed()
 	level_creator.setup_slots()
-	apply_saved.apply()
 	entered_word.init()
 end
 

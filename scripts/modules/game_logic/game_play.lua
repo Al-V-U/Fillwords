@@ -15,6 +15,7 @@ local function animate_letter(slot, zoom_in)
 end
 
 local function setup_connector(slot, direction, color)
+	slot.connector_direction = direction
 	if direction == const.DIRECTIONS.NONE then
 		gui.set_enabled(slot.connector_center_node, false)
 		return
@@ -47,6 +48,16 @@ local function check_task_words(link)
 	return false
 end
 
+local function setup_slot(slot, zoom_in, color, insert, connector_slot, direction)
+	animate_letter(slot, zoom_in)
+	gui.set_color(slot.back_node, color)
+	slot.back_color = color
+	setup_connector(connector_slot, direction, color)
+	if insert then
+		table.insert(game_play_data.link, slot)
+	end
+end
+
 function M.remove_link(save)
 	if game_play_data.link == nil or #game_play_data.link == 0 then
 		return false
@@ -57,9 +68,9 @@ function M.remove_link(save)
 		local another_word = words.check_word(game_play_data.link)
 		if another_word ~= nil then
 			if profile_service.add_found_word(another_word) then
-				--show effect
+				--TODO: show effect
 			else
-				--show info panel - already found
+				--TODO: show info panel - already found
 			end
 		end
 	end
@@ -72,23 +83,13 @@ function M.remove_link(save)
 		return true
 	end
 	for _,slot in pairs(game_play_data.link) do
-		animate_letter(slot, false)
-		gui.set_color(slot.back_node, const.EMPTY_COLOR)
-		setup_connector(slot, const.DIRECTIONS.NONE)
+		setup_slot(slot, false, const.EMPTY_COLOR, false, slot, const.DIRECTIONS.NONE)
 	end
 	return false
 end
 
-local function to_link(slot, color, insert)
-	animate_letter(slot, true)
-	gui.set_color(slot.back_node, color)
-	if insert then
-		table.insert(game_play_data.link, slot)
-	end
-end
-
 function M.add_to_link(slot)
-	-- outside board or empty
+	-- ignore finished
 	if slot.is_finished then
 		return false
 	end
@@ -97,7 +98,7 @@ function M.add_to_link(slot)
 
 	-- add the first slot to the link without any checks
 	if #game_play_data.link == 0 then
-		to_link(slot, color, true)
+		setup_slot(slot, true, color, true, slot, const.DIRECTIONS.NONE)
 		return true, color
 	end
 
@@ -112,8 +113,7 @@ function M.add_to_link(slot)
 	-- remove the last slot of the link
 	if previous == slot then
 		game_play_data.link[#game_play_data.link] = nil
-		to_link(last, const.EMPTY_COLOR, false)
-		setup_connector(slot, const.DIRECTIONS.NONE)
+		setup_slot(last, false, const.EMPTY_COLOR, false, slot, const.DIRECTIONS.NONE)
 		return true, color
 	end
 	-- don't try to add the same slot twice
@@ -123,9 +123,8 @@ function M.add_to_link(slot)
 		end
 	end
 
-	to_link(slot, color, true)
 	local direction = utils.calc_direction(last.x - slot.x, last.y - slot.y)
-	setup_connector(last, direction, color)
+	setup_slot(slot, true, color, true, last, direction)
 	return true, color
 end
 

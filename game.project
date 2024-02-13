@@ -9,6 +9,7 @@ dependencies#4 = https://github.com/britzl/monarch/archive/master.zip
 
 [bootstrap]
 main_collection = /game_objects/main.collectionc
+render = /config/custom.renderc
 
 [input]
 game_binding = /input/game.input_bindingc

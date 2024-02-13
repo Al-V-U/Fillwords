@@ -28,6 +28,16 @@ local function calc_slot_param(size)
 	return spacing, cell_size, field_size
 end
 
+local function setup_connector(slot, direction, color)
+	if direction == const.DIRECTIONS.NONE then
+		gui.set_enabled(slot.connector_center_node, false)
+		return
+	end
+	gui.set_enabled(slot.connector_center_node, true)
+	gui.set_color(slot.connector_node, color)
+	gui.set_rotation(slot.connector_center_node, vmath.quat_rotation_z(math.rad(direction)))
+end
+
 local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to_zero)
 	local position = vmath.vector3(
 		center.x - field_size / 2.0 + (slot.x - 1) * spacing + spacing / 2,
@@ -35,7 +45,7 @@ local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to
 		0
 	)
 
-	gui.set_color(slot.back_node, const.EMPTY_COLOR)
+	gui.set_color(slot.back_node, slot.back_color)
 	gui.set_position(slot.back_node, position)
 	gui.set_size(slot.back_node, cell_size)
 
@@ -44,7 +54,8 @@ local function setup_slot(slot, center, spacing, cell_size, field_size, scale_to
 
 	gui.set_position(slot.connector_node, vmath.vector3(cell_size.x / 2, 0, 0))
 	gui.set_size(slot.connector_node, vmath.vector3((spacing - cell_size.x) * 2, cell_size.y, 0))
-	gui.set_enabled(slot.connector_center_node, false)
+
+	setup_connector(slot, slot.connector_direction, slot.back_color)
 
 	if scale_to_zero then
 		gui.set_scale(slot.back_node, const.VECTOR_3_ZERO)
@@ -60,7 +71,6 @@ function M.setup_slots(scale_to_zero)
 
 	for _, s in pairs(game_play_data.slots) do
 		for _, slot in pairs(s) do
-			slot.is_finished = false
 			setup_slot(slot, center, spacing, cell_size, field_size, scale_to_zero)
 		end
 	end
@@ -85,10 +95,12 @@ function M.create(self)
 				letter_node = nodes[const.N_FIELD_LETTER_TEXT],
 				connector_center_node = nodes[const.N_CONNECTOR_CENTER],
 				connector_node = nodes[const.N_CONNECTOR],
+				connector_direction = const.DIRECTIONS.NONE,
 				letter = letter,
 				index = index,
 				x = x,
 				y = y,
+				back_color = const.EMPTY_COLOR,
 				is_finished = false
 			}
 		end

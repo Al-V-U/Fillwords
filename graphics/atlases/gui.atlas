@@ -38,6 +38,18 @@ images {
   image: "/graphics/IconButton_Small_Blank_Square.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/graphics/Icon_Small_WhiteOutline_Check.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/graphics/IconButton_Small_Background_Circle.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/graphics/IconButton_Small_Green_Circle.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 margin: 0
 extrude_borders: 3
 inner_padding: 0
