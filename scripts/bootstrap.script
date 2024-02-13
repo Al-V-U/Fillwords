@@ -41,6 +41,7 @@ end
 
 function init(self)
 	msg.post("@render:", "use_stretch_projection", { near = -1, far = 1 })
+	msg.post("#", "init_monarch") -- wait until init() has been called for all screen.script instances
 
 	go.set("logo#sprite", "tint", vmath.vector4(1, 1, 1, 0))
 	animate_logo(1, 0,

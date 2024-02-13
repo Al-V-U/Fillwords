@@ -1539,6 +1539,9 @@ nodes {
   visible: false
   material: ""
 }
+layers {
+  name: "fly_anim"
+}
 material: "/builtins/materials/gui.material"
 layouts {
   name: "MyLandscape"

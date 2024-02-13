@@ -17,4 +17,8 @@ M.win_anim_scale_up_time = 0.09
 M.win_anim_scale_down_time = 0.06
 M.win_anim_letter_delay = 0.06
 
+M.fly_move_time = 0.4
+M.fly_scale_time = 0.3
+M.fly_scale_delay = 0.2
+
 return M

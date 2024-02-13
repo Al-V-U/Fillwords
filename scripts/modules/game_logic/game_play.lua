@@ -6,6 +6,7 @@ local utils = require("scripts.modules.utils")
 local entered_word = require("scripts.modules.game_logic.entered_word")
 local profile_service = require("scripts.modules.profile_service")
 local game_play_data = require("scripts.modules.data.game_play_data")
+local find_another_word = require("scripts.modules.game_logic.find_another_word")
 
 local M = {}
 
@@ -67,10 +68,14 @@ function M.remove_link(save)
 	if not find then
 		local another_word = words.check_word(game_play_data.link)
 		if another_word ~= nil then
-			if profile_service.add_found_word(another_word) then
-				--TODO: show effect
+			if level.current_level.words[another_word] ~= nil then
+				--TODO: show info panel - right word in wrong place
+				print("\"" .. utf8.upper(another_word) .. "\" - это правильное слово, но расположите его по другому")
+			elseif profile_service.add_found_word(another_word) then
+				find_another_word.fly_word_to_counter()
 			else
 				--TODO: show info panel - already found
+				print("Слово: \"" .. utf8.upper(another_word) .. "\" уже угадано")
 			end
 		end
 	end
