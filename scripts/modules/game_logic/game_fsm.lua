@@ -4,7 +4,7 @@ local level_creator = require("scripts.modules.game_logic.level_creator")
 local profile_service = require("scripts.modules.profile_service")
 local game_play = require("scripts.modules.game_logic.game_play")
 local apply_saved = require("scripts.modules.game_logic.apply_saved")
-local start_level_animator = require("scripts.modules.game_logic.start_level_animator")
+local level_animator = require("scripts.modules.game_logic.level_animator")
 local found_words_counter = require("scripts.modules.game_logic.found_words_counter")
 local entered_word = require("scripts.modules.game_logic.entered_word")
 local monarch = require "monarch.monarch"
@@ -28,17 +28,14 @@ local function fsm_onapply()
 end
 
 local function fsm_onshow(self)
-	print "show"
-	start_level_animator.animate(
+	level_animator.start_level_animate(
 		function()
-			print "show end"
 			self.fsm:play_game()
 		end
 	)
 end
 
 local function fsm_onplay(self)
-	print "play"
 	game_play.start_play(self,
 		function()
 			self.fsm:win_game()
@@ -47,10 +44,9 @@ local function fsm_onplay(self)
 end
 
 local function fsm_onwin(self)
-	print "win"
 	found_words_counter.final()
 	profile_service.finish_level()
-	timer.delay(1, false,
+	level_animator.finish_level_animate(
 		function()
 			self.fsm:complete()
 		end
@@ -58,7 +54,6 @@ local function fsm_onwin(self)
 end
 
 local function fsm_onfinish(self)
-	print("finish")
 	self.fsm = nil
 	game_play_data.clear()
 	monarch.replace(const.SCREENS.WIN_SCREEN)

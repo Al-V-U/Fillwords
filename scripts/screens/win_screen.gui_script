@@ -9,6 +9,9 @@ local cfg = require("scripts.modules.data.cfg")
 local level_items = {}
 local grid_scroll = nil
 local grid = nil
+local disabled_alpha = 0.7
+local checkmark_anim_duration = 0.4
+local checkmark_anim_delay = 0.3
 
 local function on_next_level_btn_click()
     print "win next click"
@@ -23,8 +26,8 @@ local function setup_level_items(to_item)
             gui.play_flipbook(level_items[i].back_node, "IconButton_Small_Orange_Circle")
         elseif not level_items[i].completed then
             gui.set_enabled(level_items[i].check_node, false)
-            gui.set_alpha(level_items[i].back_node, 0.7)
-            gui.set_alpha(level_items[i].text_node, 0.7)
+            gui.set_alpha(level_items[i].back_node, disabled_alpha)
+            gui.set_alpha(level_items[i].text_node, disabled_alpha)
             gui.play_flipbook(level_items[i].back_node, "IconButton_Small_Background_Circle")
         else
             gui.set_enabled(level_items[i].check_node, true)
@@ -66,8 +69,15 @@ local function init_scroll_with_grid(self)
 
     gui.set_alpha(level_items[completed_level_count].check_node, 0)
     gui.set_scale(level_items[completed_level_count].check_node, vmath.vector3(3, 3, 1))
-    gui.animate(level_items[completed_level_count].check_node, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_LINEAR, 0.4, 0.3)
-    gui.animate(level_items[completed_level_count].check_node, "scale", vmath.vector3(1, 1, 1), gui.EASING_OUTELASTIC, 0.4, 0.3)
+    gui.animate(
+        level_items[completed_level_count].check_node,
+        "color", vmath.vector4(1, 1, 1, 1),
+        gui.EASING_LINEAR, checkmark_anim_duration, checkmark_anim_delay
+    )
+    gui.animate(level_items[completed_level_count].check_node,
+        "scale", vmath.vector3(1, 1, 1),
+        gui.EASING_OUTELASTIC, checkmark_anim_duration, checkmark_anim_delay
+    )
     setup_level_items(completed_level_count)
 
     if completed_level_count < cfg.levels_count then

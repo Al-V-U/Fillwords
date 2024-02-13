@@ -12,4 +12,9 @@ M.letter_select_scale = nil
 M.show_level_time = 0.4
 M.entered_words_text_color = vmath.vector4(0, 0, 0, 1)
 
+M.win_anim_letter_scale = 1.3
+M.win_anim_scale_up_time = 0.09
+M.win_anim_scale_down_time = 0.06
+M.win_anim_letter_delay = 0.06
+
 return M
