@@ -10,26 +10,22 @@ local cfg = require("scripts.modules.data.cfg")
 local level_items = {}
 local grid_scroll = nil
 local grid = nil
-local disabled_alpha = 0.7
-local checkmark_anim_duration = 0.4
-local checkmark_anim_delay = 0.6
 
 local function on_next_level_btn_click()
-    print "win next click"
     monarch.replace(const.SCREENS.GAME_SCREEN)
 end
 
 local function setup_level_items(to_item)
     for i = 1, cfg.levels_count do
-        gui.set_text(level_items[i].text_node, "Уровень " .. i)
+        gui.set_text(level_items[i].text_node, cfg.level_text .. i)
         if level_items[i].opened then
             gui.set_enabled(level_items[i].check_node, false)
-            gui.play_flipbook(level_items[i].back_node, "IconButton_Small_Orange_Circle")
+            gui.play_flipbook(level_items[i].back_node, cfg.win_screen_level_opened_back)
         elseif not level_items[i].completed then
             gui.set_enabled(level_items[i].check_node, false)
-            gui.set_alpha(level_items[i].back_node, disabled_alpha)
-            gui.set_alpha(level_items[i].text_node, disabled_alpha)
-            gui.play_flipbook(level_items[i].back_node, "IconButton_Small_Background_Circle")
+            gui.set_alpha(level_items[i].back_node, cfg.win_screen_disabled_alpha)
+            gui.set_alpha(level_items[i].text_node, cfg.win_screen_disabled_alpha)
+            gui.play_flipbook(level_items[i].back_node, cfg.win_screen_level_disabled_back)
         else
             gui.set_enabled(level_items[i].check_node, true)
         end
@@ -59,7 +55,7 @@ local function init_scroll_with_grid(self)
 
         level_items[i] = {
             position = gui.get_position(clone_prefab["level_item_prefab"]),
-            text = "Уровень " .. i,
+            text = cfg.level_text .. i,
             completed = i <= completed_level_count,
             opened = i == completed_level_count + 1,
             text_node = clone_prefab["level_item_text"],
@@ -69,15 +65,21 @@ local function init_scroll_with_grid(self)
     end
 
     gui.set_alpha(level_items[completed_level_count].check_node, 0)
-    gui.set_scale(level_items[completed_level_count].check_node, vmath.vector3(3, 3, 1))
+    gui.set_scale(
+        level_items[completed_level_count].check_node,
+        vmath.vector3(cfg.win_screen_checkmark_start_scale,
+        cfg.win_screen_checkmark_start_scale, 1)
+    )
     gui.animate(
         level_items[completed_level_count].check_node,
-        "color", vmath.vector4(1, 1, 1, 1),
-        gui.EASING_LINEAR, checkmark_anim_duration, checkmark_anim_delay
+        "color", const.VECTOR_4_ONE,
+        gui.EASING_LINEAR, cfg.win_screen_checkmark_anim_time,
+        cfg.win_screen_checkmark_anim_delay
     )
     gui.animate(level_items[completed_level_count].check_node,
-        "scale", vmath.vector3(1, 1, 1),
-        gui.EASING_OUTELASTIC, checkmark_anim_duration, checkmark_anim_delay
+        "scale", const.VECTOR_3_ONE,
+        gui.EASING_OUTELASTIC, cfg.win_screen_checkmark_anim_time,
+        cfg.win_screen_checkmark_anim_delay
     )
     setup_level_items(completed_level_count)
 
@@ -100,15 +102,14 @@ function init(self)
 
     self.texts = {
         self.druid:new_text("next_level_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("level_num_text", cfg.level_text .. profile_service.get_level_num() - 1, druid_const.TEXT_ADJUST.DOWNSCALE),
         self.druid:new_text("banner_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
     }
-
-    gui.set_text(gui.get_node("level_num_text"), "УРОВЕНЬ " .. profile_service.get_level_num() - 1)
 
     --scroll
     init_scroll_with_grid(self)
 
-    local transition = transitions.fade_in_out(gui.get_node("panel"), 0.2, 0)
+    local transition = transitions.fade_in_out(gui.get_node("panel"), cfg.fade_screen_time, 0)
     monarch.on_transition("win_screen", transition)
 end
 
@@ -124,8 +125,8 @@ function on_message(self, message_id, message, sender)
     if message_id == const.MSG_LAYOUT_CHANGED then
         cfg.is_portrait = message.id == const.MSG_ID_PORTRAIT and true or false
         local cur_level = profile_service.get_level_num()
-        if cur_level > 5 then
-            cur_level = 5
+        if cur_level > cfg.levels_count then
+            cur_level = cfg.levels_count
         end
         setup_level_items(cur_level)
     end

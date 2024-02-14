@@ -876,8 +876,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.0
-    y: 1.0
+    x: 1.5
+    y: 1.5
     z: 1.0
     w: 1.0
   }
@@ -1436,8 +1436,8 @@ layouts {
       w: 1.0
     }
     scale {
-      x: 1.0
-      y: 1.0
+      x: 3.0
+      y: 3.0
       z: 1.0
       w: 1.0
     }
@@ -1475,6 +1475,7 @@ layouts {
     clipping_inverted: false
     alpha: 1.0
     overridden_fields: 1
+    overridden_fields: 3
     template_node_child: false
     size_mode: SIZE_MODE_AUTO
     custom_type: 0

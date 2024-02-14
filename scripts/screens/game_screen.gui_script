@@ -23,7 +23,6 @@ function init(self)
     self.druid = druid.new(self)
 
     game_fsm.init(self)
-    gui.set_text(gui.get_node("level_num_text"), "УРОВЕНЬ " .. profile_service.get_level_num())
 
     local cheat_btn = self.druid:new_button("cheat_win_btn", on_cheat_win_btn_click)
     cheat_btn:set_style(druid_style)
@@ -33,12 +32,11 @@ function init(self)
 
     self.texts = {
         self.druid:new_text("cheat_win_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
-        self.druid:new_text("level_num_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
+        self.druid:new_text("level_num_text", cfg.level_text .. profile_service.get_level_num(), druid_const.TEXT_ADJUST.DOWNSCALE),
         self.druid:new_text("reset_counter_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
-        self.druid:new_text("found_words_counter_text", nil, druid_const.TEXT_ADJUST.DOWNSCALE),
     }
 
-    local transition = transitions.fade_in_out(gui.get_node("root"), 0.2, 0)
+    local transition = transitions.fade_in_out(gui.get_node("root"), cfg.fade_screen_time, 0)
     monarch.on_transition("game_screen", transition)
 end
 

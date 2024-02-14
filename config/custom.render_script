@@ -217,6 +217,7 @@ function on_message(self, message_id, message)
         update_clear_color(state, message.color)
     elseif message_id == MSG_WINDOW_RESIZED then
         update_state(state)
+        cfg.is_portrait = state.window_height > state.window_width
     elseif message_id == MSG_SET_VIEW_PROJ then
         camera.view = message.view
         self.camera_projection = message.projection or vmath.matrix4()
@@ -226,7 +227,6 @@ function on_message(self, message_id, message)
     elseif message_id == MSG_USE_STRETCH_PROJ then
         init_camera(camera, get_stretch_projection, message.near, message.far)
         update_camera(camera, state)
-        cfg.is_portrait = state.window_height > state.window_width
     elseif message_id == MSG_USE_FIXED_PROJ then
         init_camera(camera, get_fixed_projection, message.near, message.far, message.zoom)
         update_camera(camera, state)

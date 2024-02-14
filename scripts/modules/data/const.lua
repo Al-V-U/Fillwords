@@ -15,6 +15,7 @@ M.MSG_ID_PORTRAIT = hash("MyPortrait")
 M.DICTIONARY_PATH = "/dictionary/russian_nouns.txt"
 
 M.VECTOR_3_ONE = vmath.vector3(1, 1, 1)
+M.VECTOR_4_ONE = vmath.vector4(1, 1, 1, 1)
 M.VECTOR_3_ZERO = vmath.vector3(0, 0, 0)
 
 M.EMPTY_COLOR = vmath.vector4(0.9, 0.9, 0.9, 1)

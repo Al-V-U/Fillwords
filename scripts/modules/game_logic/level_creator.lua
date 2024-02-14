@@ -7,7 +7,6 @@ local M = {}
 
 local function calc_slot_param(size)
 	local field_size = cfg.is_portrait and cfg.field_size_portrait or cfg.field_size_landscape
-	print("field_size", field_size)
 	local spacing = field_size / size
 
 	cfg.cell_size = vmath.vector3(

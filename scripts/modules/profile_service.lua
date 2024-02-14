@@ -201,14 +201,17 @@ end
 function M.save_profile(fast)
 	if yagames_initialized then
 		fast = fast ~= nil and fast or false
-		yagames.player_set_data(profile, fast, function() print("save profile") end)
+		yagames.player_set_data(profile, fast,
+			function()
+				--print("Save profile")
+			end
+		)
 	else
 		local game_name = sys.get_config("project.title")
 		local save_path = sys.get_save_file(game_name, "profile")
 		if not sys.save(save_path, profile) then
 			print("save profile error!")
 		end
-		print(save_path)
 	end
 end
 

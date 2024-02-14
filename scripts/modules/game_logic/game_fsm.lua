@@ -113,6 +113,7 @@ end
 function M.layout_changed()
 	level_creator.setup_slots()
 	entered_word.init()
+	found_words_counter.set_counter()
 end
 
 return M
